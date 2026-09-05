@@ -50,4 +50,4 @@ The `notes` table is created automatically on startup — no manual migration st
 | DELETE | `/api/notes/:id`  | Delete a note       |
 | GET    | `/healthz`        | Health check        |
 
-Interactive API docs (Swagger UI) are served at `/api-docs`, generated from `src/openapi.yaml`.
+Interactive API docs (Swagger UI) are served at `/api-docs`, generated from `src/openapi.yaml`. Each endpoint has a **Try it out** button — fill in the fields and click **Execute** to send a real request against the live API and see the actual response.

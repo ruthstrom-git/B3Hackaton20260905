@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  title: B3 Hackathon Demo — Notes API
+  description: Simple CRUD API for notes, backed by PostgreSQL.
+  version: 1.0.0
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /api/notes:
+    get:
+      summary: List all notes
+      tags: [Notes]
+      responses:
+        '200':
+          description: List of notes, newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+    post:
+      summary: Create a note
+      tags: [Notes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteInput'
+      responses:
+        '201':
+          description: Note created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: Missing required title
+  /api/notes/{id}:
+    put:
+      summary: Update a note
+      tags: [Notes]
+      parameters:
+        - $ref: '#/components/parameters/NoteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteInput'
+      responses:
+        '200':
+          description: Note updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: Missing required title
+        '404':
+          description: Note not found
+    delete:
+      summary: Delete a note
+      tags: [Notes]
+      parameters:
+        - $ref: '#/components/parameters/NoteId'
+      responses:
+        '204':
+          description: Note deleted
+        '404':
+          description: Note not found
+components:
+  parameters:
+    NoteId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  schemas:
+    Note:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Groceries
+        content:
+          type: string
+          nullable: true
+          example: Milk, eggs, bread
+        created_at:
+          type: string
+          format: date-time
+    NoteInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          example: Groceries
+        content:
+          type: string
+          nullable: true
+          example: Milk, eggs, bread

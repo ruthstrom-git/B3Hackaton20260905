@@ -16,6 +16,7 @@ app.use('/api/conversations', conversationsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
 app.get('/healthz', (req, res) => res.status(200).json({ status: 'ok' }));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'admin.html')));
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

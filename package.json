@@ -1,7 +1,7 @@
 {
-  "name": "b3-hackaton-demo",
+  "name": "psyko-mode",
   "version": "1.0.0",
-  "description": "Conversation-mode tracking demo: Express + PostgreSQL + plain HTML/JS",
+  "description": "Psyko Mode: conversation-mode tracking demo (Express + PostgreSQL + plain HTML/JS)",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js"

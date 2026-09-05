@@ -15,7 +15,7 @@ function validateMode(mode, res) {
 
 router.get('/', async (req, res, next) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM conversations ORDER BY created_at DESC');
+    const { rows } = await pool.query('SELECT * FROM conversations ORDER BY created DESC');
     res.json(rows);
   } catch (err) {
     next(err);

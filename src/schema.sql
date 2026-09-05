@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS conversations (
   mode TEXT NOT NULL CHECK (mode IN ('Bright', 'Content', 'Calm', 'Tired', 'Tense')),
   location TEXT,
   content TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  created TIMESTAMPTZ NOT NULL DEFAULT now()
 );

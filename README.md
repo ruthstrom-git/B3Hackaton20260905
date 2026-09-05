@@ -1,4 +1,4 @@
-# B3 Hackathon Demo — Conversations App
+# Psyko Mode
 
 A minimal full-stack CRUD demo: Express API + PostgreSQL + plain HTML/CSS/JS frontend, served from a single Node process. A **conversation** logs a person's mode (Bright, Content, Calm, Tired, Tense) along with when and where it was recorded.
 
@@ -37,8 +37,10 @@ The `conversations` table is created automatically on startup — no manual migr
 1. Push this repo to GitHub (already connected to `origin`).
 2. In the [Render dashboard](https://dashboard.render.com/), click **New +** → **Blueprint**, and connect this GitHub repo.
 3. Render reads `render.yaml` and provisions both the web service and the Postgres database, linking `DATABASE_URL` between them automatically.
-4. Render runs `npm install` then `npm start`, and the app (API + frontend) is live at the generated `https://<name>.onrender.com` URL.
+4. Render runs `npm install` then `npm start`, and the app (API + frontend) is live at `https://psyko-mode.onrender.com`.
 5. Every subsequent push to `main` triggers an automatic redeploy.
+
+> **Note**: `render.yaml` was renamed from `b3-hackaton-demo`/`b3-hackaton-demo-db` to `psyko-mode`/`psyko-mode-db`. Render matches Blueprint resources by name, so this creates *new* service/database resources on the next Blueprint sync rather than renaming the existing ones — delete the old `b3-hackaton-demo` service and database manually in the Render dashboard once the new ones are live.
 
 The deployed API requires **no authentication** — it's fully public at that URL, reachable by any client (e.g. a mobile app posting conversations directly).
 
@@ -52,7 +54,7 @@ Each conversation has:
 | `mode`       | text      | Required. One of: `Bright`, `Content`, `Calm`, `Tired`, `Tense`     |
 | `location`   | text      | Optional. `"lat,lng"` string, e.g. from a mobile app                |
 | `content`    | text      | Optional free-text context                                          |
-| `created_at` | timestamp | Server-assigned when the conversation is created                    |
+| `created`    | timestamp | Server-assigned when the conversation is created                    |
 
 ## API
 

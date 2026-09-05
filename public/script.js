@@ -43,7 +43,7 @@ function renderConversations(conversations) {
       </div>
     `;
     li.querySelector('h3').textContent = conversation.mode;
-    li.querySelector('.timestamp').textContent = new Date(conversation.created_at).toLocaleString();
+    li.querySelector('.timestamp').textContent = new Date(conversation.created).toLocaleString();
     const locationEl = li.querySelector('.location');
     const rendered = renderLocation(conversation.location);
     if (rendered) locationEl.appendChild(rendered);

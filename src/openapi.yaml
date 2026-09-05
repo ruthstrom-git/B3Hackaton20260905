@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: B3 Hackathon Demo — Conversations API
+  title: Psyko Mode API
   description: >
     Public, unauthenticated API for logging conversations about a person's
     mode (Bright, Content, Calm, Tired, Tense), backed by PostgreSQL.
@@ -41,12 +41,12 @@ paths:
                   mode: Calm
                   location: "59.3293,18.0686"
                   content: "Quick check-in after lunch"
-                  created_at: "2026-09-05T09:42:47.691Z"
+                  created: "2026-09-05T09:42:47.691Z"
                 - id: 1
                   mode: Tired
                   location: "59.3327,18.0645"
                   content: null
-                  created_at: "2026-09-05T08:15:03.120Z"
+                  created: "2026-09-05T08:15:03.120Z"
     post:
       summary: Create a conversation
       tags: [Conversations]
@@ -72,7 +72,7 @@ paths:
                 mode: Calm
                 location: "59.3293,18.0686"
                 content: "Quick check-in after lunch"
-                created_at: "2026-09-05T09:42:47.691Z"
+                created: "2026-09-05T09:42:47.691Z"
         '400':
           description: Missing or invalid mode
           content:
@@ -109,7 +109,7 @@ paths:
                 mode: Tense
                 location: "59.3293,18.0686"
                 content: "Deadline stress"
-                created_at: "2026-09-05T09:42:47.691Z"
+                created: "2026-09-05T09:42:47.691Z"
         '400':
           description: Missing or invalid mode
           content:
@@ -174,7 +174,7 @@ components:
           nullable: true
           description: Optional free-text context for the conversation.
           example: "Quick check-in after lunch"
-        created_at:
+        created:
           type: string
           format: date-time
           description: Server-assigned timestamp of when the conversation was created.

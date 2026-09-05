@@ -1,10 +1,10 @@
 databases:
-  - name: b3-hackaton-demo-db
+  - name: psyko-mode-db
     plan: free
 
 services:
   - type: web
-    name: b3-hackaton-demo
+    name: psyko-mode
     runtime: node
     plan: free
     buildCommand: npm install
@@ -13,5 +13,5 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: b3-hackaton-demo-db
+          name: psyko-mode-db
           property: connectionString

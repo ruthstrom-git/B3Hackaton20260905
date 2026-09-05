@@ -54,7 +54,7 @@ Each conversation has:
 | `mode`       | text      | Required. One of: `Bright`, `Content`, `Calm`, `Tired`, `Tense`     |
 | `location`   | text      | Optional. `"lat,lng"` string, e.g. from a mobile app                |
 | `content`    | text      | Optional free-text context                                          |
-| `created`    | timestamp | Server-assigned when the conversation is created                    |
+| `created`    | timestamp | Optional in POST/PUT — uses the given timestamp if provided, otherwise server-assigned |
 
 ## API
 

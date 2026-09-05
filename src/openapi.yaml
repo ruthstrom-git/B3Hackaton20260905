@@ -74,7 +74,7 @@ paths:
                 content: "Quick check-in after lunch"
                 created: "2026-09-05T09:42:47.691Z"
         '400':
-          description: Missing or invalid mode
+          description: Missing/invalid mode, or an invalid created timestamp
           content:
             application/json:
               schema:
@@ -111,7 +111,7 @@ paths:
                 content: "Deadline stress"
                 created: "2026-09-05T09:42:47.691Z"
         '400':
-          description: Missing or invalid mode
+          description: Missing/invalid mode, or an invalid created timestamp
           content:
             application/json:
               schema:
@@ -196,6 +196,14 @@ components:
           type: string
           nullable: true
           example: "Quick check-in after lunch"
+        created:
+          type: string
+          format: date-time
+          nullable: true
+          description: >
+            Optional client-supplied creation timestamp. If provided, it is
+            used as-is; if omitted, the server assigns the current time.
+          example: "2026-09-05T09:42:47.691Z"
     Error:
       type: object
       properties:

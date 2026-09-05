@@ -13,6 +13,16 @@ function validateMode(mode, res) {
   return true;
 }
 
+// Returns [isValid, value]. `created` is optional, so undefined/null is valid (value: null).
+function validateCreated(created, res) {
+  if (created === undefined || created === null || created === '') return [true, null];
+  if (Number.isNaN(new Date(created).getTime())) {
+    res.status(400).json({ error: 'created must be a valid ISO 8601 timestamp' });
+    return [false, null];
+  }
+  return [true, created];
+}
+
 router.get('/', async (req, res, next) => {
   try {
     const { rows } = await pool.query('SELECT * FROM conversations ORDER BY created DESC');
@@ -24,11 +34,13 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { mode, location, content } = req.body;
+    const { mode, location, content, created } = req.body;
     if (!validateMode(mode, res)) return;
+    const [createdValid, createdValue] = validateCreated(created, res);
+    if (!createdValid) return;
     const { rows } = await pool.query(
-      'INSERT INTO conversations (mode, location, content) VALUES ($1, $2, $3) RETURNING *',
-      [mode, location || null, content || null]
+      'INSERT INTO conversations (mode, location, content, created) VALUES ($1, $2, $3, COALESCE($4::timestamptz, now())) RETURNING *',
+      [mode, location || null, content || null, createdValue]
     );
     res.status(201).json(rows[0]);
   } catch (err) {
@@ -38,11 +50,13 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   try {
-    const { mode, location, content } = req.body;
+    const { mode, location, content, created } = req.body;
     if (!validateMode(mode, res)) return;
+    const [createdValid, createdValue] = validateCreated(created, res);
+    if (!createdValid) return;
     const { rows } = await pool.query(
-      'UPDATE conversations SET mode = $1, location = $2, content = $3 WHERE id = $4 RETURNING *',
-      [mode, location || null, content || null, req.params.id]
+      'UPDATE conversations SET mode = $1, location = $2, content = $3, created = COALESCE($4::timestamptz, created) WHERE id = $5 RETURNING *',
+      [mode, location || null, content || null, createdValue, req.params.id]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'conversation not found' });
     res.json(rows[0]);

@@ -5,14 +5,14 @@ const express = require('express');
 const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
 const { initSchema } = require('./db');
-const notesRouter = require('./routes/notes');
+const conversationsRouter = require('./routes/conversations');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const openapiSpec = yaml.load(fs.readFileSync(path.join(__dirname, 'openapi.yaml'), 'utf8'));
 
 app.use(express.json());
-app.use('/api/notes', notesRouter);
+app.use('/api/conversations', conversationsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
 app.get('/healthz', (req, res) => res.status(200).json({ status: 'ok' }));

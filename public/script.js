@@ -1,68 +1,94 @@
-const form = document.getElementById('note-form');
-const idField = document.getElementById('note-id');
-const titleField = document.getElementById('note-title');
-const contentField = document.getElementById('note-content');
+const form = document.getElementById('conversation-form');
+const idField = document.getElementById('conversation-id');
+const modeField = document.getElementById('conversation-mode');
+const locationField = document.getElementById('conversation-location');
+const contentField = document.getElementById('conversation-content');
 const submitBtn = document.getElementById('submit-btn');
 const cancelBtn = document.getElementById('cancel-btn');
-const list = document.getElementById('notes-list');
+const list = document.getElementById('conversations-list');
 
-async function fetchNotes() {
-  const res = await fetch('/api/notes');
-  const notes = await res.json();
-  renderNotes(notes);
+const LAT_LNG_PATTERN = /^\s*(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)\s*$/;
+
+async function fetchConversations() {
+  const res = await fetch('/api/conversations');
+  const conversations = await res.json();
+  renderConversations(conversations);
 }
 
-function renderNotes(notes) {
+function renderLocation(location) {
+  if (!location) return '';
+  const match = location.match(LAT_LNG_PATTERN);
+  if (!match) return document.createTextNode(location);
+  const link = document.createElement('a');
+  link.href = `https://www.google.com/maps?q=${match[1]},${match[3]}`;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.textContent = location;
+  return link;
+}
+
+function renderConversations(conversations) {
   list.innerHTML = '';
-  for (const note of notes) {
+  for (const conversation of conversations) {
     const li = document.createElement('li');
-    li.className = 'note';
+    li.className = 'conversation';
     li.innerHTML = `
       <h3></h3>
-      <p></p>
-      <div class="note-actions">
+      <p class="timestamp"></p>
+      <p class="location"></p>
+      <p class="content"></p>
+      <div class="conversation-actions">
         <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
       </div>
     `;
-    li.querySelector('h3').textContent = note.title;
-    li.querySelector('p').textContent = note.content || '';
-    li.querySelector('.edit-btn').addEventListener('click', () => startEdit(note));
-    li.querySelector('.delete-btn').addEventListener('click', () => deleteNote(note.id));
+    li.querySelector('h3').textContent = conversation.mode;
+    li.querySelector('.timestamp').textContent = new Date(conversation.created_at).toLocaleString();
+    const locationEl = li.querySelector('.location');
+    const rendered = renderLocation(conversation.location);
+    if (rendered) locationEl.appendChild(rendered);
+    li.querySelector('.content').textContent = conversation.content || '';
+    li.querySelector('.edit-btn').addEventListener('click', () => startEdit(conversation));
+    li.querySelector('.delete-btn').addEventListener('click', () => deleteConversation(conversation.id));
     list.appendChild(li);
   }
 }
 
-function startEdit(note) {
-  idField.value = note.id;
-  titleField.value = note.title;
-  contentField.value = note.content || '';
-  submitBtn.textContent = 'Save note';
+function startEdit(conversation) {
+  idField.value = conversation.id;
+  modeField.value = conversation.mode;
+  locationField.value = conversation.location || '';
+  contentField.value = conversation.content || '';
+  submitBtn.textContent = 'Save conversation';
   cancelBtn.hidden = false;
 }
 
 function resetForm() {
   form.reset();
   idField.value = '';
-  submitBtn.textContent = 'Add note';
+  submitBtn.textContent = 'Add conversation';
   cancelBtn.hidden = true;
 }
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = idField.value;
-  const body = JSON.stringify({ title: titleField.value, content: contentField.value });
+  const body = JSON.stringify({
+    mode: modeField.value,
+    location: locationField.value,
+    content: contentField.value,
+  });
   const options = { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body };
-  await fetch(id ? `/api/notes/${id}` : '/api/notes', options);
+  await fetch(id ? `/api/conversations/${id}` : '/api/conversations', options);
   resetForm();
-  fetchNotes();
+  fetchConversations();
 });
 
 cancelBtn.addEventListener('click', resetForm);
 
-async function deleteNote(id) {
-  await fetch(`/api/notes/${id}`, { method: 'DELETE' });
-  fetchNotes();
+async function deleteConversation(id) {
+  await fetch(`/api/conversations/${id}`, { method: 'DELETE' });
+  fetchConversations();
 }
 
-fetchNotes();
+fetchConversations();

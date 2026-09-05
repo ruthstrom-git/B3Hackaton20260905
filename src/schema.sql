@@ -1,6 +1,9 @@
-CREATE TABLE IF NOT EXISTS notes (
+DROP TABLE IF EXISTS notes;
+
+CREATE TABLE IF NOT EXISTS conversations (
   id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
+  mode TEXT NOT NULL CHECK (mode IN ('Bright', 'Content', 'Calm', 'Tired', 'Tense')),
+  location TEXT,
   content TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

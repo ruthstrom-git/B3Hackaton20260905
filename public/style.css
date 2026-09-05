@@ -19,7 +19,7 @@ h1 {
   margin-bottom: 1rem;
 }
 
-#note-form {
+#conversation-form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -30,15 +30,16 @@ h1 {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-#note-form input,
-#note-form textarea {
+#conversation-form select,
+#conversation-form input,
+#conversation-form textarea {
   font: inherit;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-#note-form textarea {
+#conversation-form textarea {
   min-height: 4rem;
   resize: vertical;
 }
@@ -62,7 +63,7 @@ button {
   background: #999;
 }
 
-#notes-list {
+#conversations-list {
   list-style: none;
   padding: 0;
   display: flex;
@@ -70,35 +71,40 @@ button {
   gap: 0.75rem;
 }
 
-.note {
+.conversation {
   background: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.note h3 {
+.conversation h3 {
   margin: 0 0 0.25rem;
 }
 
-.note p {
+.conversation p {
   margin: 0 0 0.5rem;
   white-space: pre-wrap;
   color: #444;
 }
 
-.note-actions {
+.conversation .timestamp {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.conversation-actions {
   display: flex;
   gap: 0.5rem;
 }
 
-.note-actions button {
+.conversation-actions button {
   background: #eee;
   color: #1a1a1a;
   padding: 0.25rem 0.75rem;
 }
 
-.note-actions .delete-btn {
+.conversation-actions .delete-btn {
   background: #dc2626;
   color: white;
 }

@@ -1,7 +1,9 @@
 openapi: 3.0.3
 info:
-  title: B3 Hackathon Demo — Notes API
-  description: Simple CRUD API for notes, backed by PostgreSQL.
+  title: B3 Hackathon Demo — Conversations API
+  description: >
+    Public, unauthenticated API for logging conversations about a person's
+    mode (Bright, Content, Calm, Tired, Tense), backed by PostgreSQL.
   version: 1.0.0
 paths:
   /healthz:
@@ -19,103 +21,184 @@ paths:
                   status:
                     type: string
                     example: ok
-  /api/notes:
+              example:
+                status: ok
+  /api/conversations:
     get:
-      summary: List all notes
-      tags: [Notes]
+      summary: List all conversations
+      tags: [Conversations]
       responses:
         '200':
-          description: List of notes, newest first
+          description: List of conversations, newest first
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Note'
+                  $ref: '#/components/schemas/Conversation'
+              example:
+                - id: 2
+                  mode: Calm
+                  location: "59.3293,18.0686"
+                  content: "Quick check-in after lunch"
+                  created_at: "2026-09-05T09:42:47.691Z"
+                - id: 1
+                  mode: Tired
+                  location: "59.3327,18.0645"
+                  content: null
+                  created_at: "2026-09-05T08:15:03.120Z"
     post:
-      summary: Create a note
-      tags: [Notes]
+      summary: Create a conversation
+      tags: [Conversations]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteInput'
+              $ref: '#/components/schemas/ConversationInput'
+            example:
+              mode: Calm
+              location: "59.3293,18.0686"
+              content: "Quick check-in after lunch"
       responses:
         '201':
-          description: Note created
+          description: Conversation created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
+                $ref: '#/components/schemas/Conversation'
+              example:
+                id: 2
+                mode: Calm
+                location: "59.3293,18.0686"
+                content: "Quick check-in after lunch"
+                created_at: "2026-09-05T09:42:47.691Z"
         '400':
-          description: Missing required title
-  /api/notes/{id}:
+          description: Missing or invalid mode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "mode is required and must be one of: Bright, Content, Calm, Tired, Tense"
+  /api/conversations/{id}:
     put:
-      summary: Update a note
-      tags: [Notes]
+      summary: Update a conversation
+      tags: [Conversations]
       parameters:
-        - $ref: '#/components/parameters/NoteId'
+        - $ref: '#/components/parameters/ConversationId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteInput'
+              $ref: '#/components/schemas/ConversationInput'
+            example:
+              mode: Tense
+              location: "59.3293,18.0686"
+              content: "Deadline stress"
       responses:
         '200':
-          description: Note updated
+          description: Conversation updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
+                $ref: '#/components/schemas/Conversation'
+              example:
+                id: 2
+                mode: Tense
+                location: "59.3293,18.0686"
+                content: "Deadline stress"
+                created_at: "2026-09-05T09:42:47.691Z"
         '400':
-          description: Missing required title
+          description: Missing or invalid mode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "mode is required and must be one of: Bright, Content, Calm, Tired, Tense"
         '404':
-          description: Note not found
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: conversation not found
     delete:
-      summary: Delete a note
-      tags: [Notes]
+      summary: Delete a conversation
+      tags: [Conversations]
       parameters:
-        - $ref: '#/components/parameters/NoteId'
+        - $ref: '#/components/parameters/ConversationId'
       responses:
         '204':
-          description: Note deleted
+          description: Conversation deleted
         '404':
-          description: Note not found
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: conversation not found
 components:
   parameters:
-    NoteId:
+    ConversationId:
       name: id
       in: path
       required: true
       schema:
         type: integer
+        example: 2
   schemas:
-    Note:
+    Conversation:
       type: object
       properties:
         id:
           type: integer
-          example: 1
-        title:
+          example: 2
+        mode:
           type: string
-          example: Groceries
+          enum: [Bright, Content, Calm, Tired, Tense]
+          example: Calm
+        location:
+          type: string
+          nullable: true
+          description: >
+            Latitude/longitude as a "lat,lng" string, typically supplied by
+            the mobile app at the moment the conversation was created.
+          example: "59.3293,18.0686"
         content:
           type: string
           nullable: true
-          example: Milk, eggs, bread
+          description: Optional free-text context for the conversation.
+          example: "Quick check-in after lunch"
         created_at:
           type: string
           format: date-time
-    NoteInput:
+          description: Server-assigned timestamp of when the conversation was created.
+          example: "2026-09-05T09:42:47.691Z"
+    ConversationInput:
       type: object
-      required: [title]
+      required: [mode]
       properties:
-        title:
+        mode:
           type: string
-          example: Groceries
+          enum: [Bright, Content, Calm, Tired, Tense]
+          example: Calm
+        location:
+          type: string
+          nullable: true
+          description: Latitude/longitude as a "lat,lng" string.
+          example: "59.3293,18.0686"
         content:
           type: string
           nullable: true
-          example: Milk, eggs, bread
+          example: "Quick check-in after lunch"
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: conversation not found

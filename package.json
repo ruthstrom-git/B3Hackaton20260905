@@ -1,7 +1,7 @@
 {
   "name": "b3-hackaton-demo",
   "version": "1.0.0",
-  "description": "Simple CRUD notes demo: Express + PostgreSQL + plain HTML/JS",
+  "description": "Conversation-mode tracking demo: Express + PostgreSQL + plain HTML/JS",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js"

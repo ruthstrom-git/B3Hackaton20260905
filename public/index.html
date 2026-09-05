@@ -3,24 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Notes Demo</title>
+  <title>Conversations Demo</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main>
-    <h1>Notes</h1>
+    <h1>Conversations</h1>
 
-    <form id="note-form">
-      <input type="hidden" id="note-id" />
-      <input type="text" id="note-title" placeholder="Title" required />
-      <textarea id="note-content" placeholder="Content"></textarea>
+    <form id="conversation-form">
+      <input type="hidden" id="conversation-id" />
+      <select id="conversation-mode" required>
+        <option value="" disabled selected>Select mode</option>
+        <option value="Bright">Bright</option>
+        <option value="Content">Content</option>
+        <option value="Calm">Calm</option>
+        <option value="Tired">Tired</option>
+        <option value="Tense">Tense</option>
+      </select>
+      <input type="text" id="conversation-location" placeholder="Location (lat,lng)" />
+      <textarea id="conversation-content" placeholder="Notes (optional)"></textarea>
       <div class="form-actions">
-        <button type="submit" id="submit-btn">Add note</button>
+        <button type="submit" id="submit-btn">Add conversation</button>
         <button type="button" id="cancel-btn" hidden>Cancel</button>
       </div>
     </form>
 
-    <ul id="notes-list"></ul>
+    <ul id="conversations-list"></ul>
   </main>
 
   <script src="script.js"></script>

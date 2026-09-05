@@ -37,14 +37,16 @@ function buildGrid(conversations) {
     return created >= start && created < end;
   });
 
-  const grid = Array.from({ length: 4 }, () => Array(7).fill(null));
+  const grid = Array.from({ length: 4 }, () => Array.from({ length: 7 }, () => []));
   for (const conversation of inWeek) {
     const created = new Date(conversation.created);
     const day = weekdayIndex(created);
     const bucket = bucketIndex(created);
-    const existing = grid[bucket][day];
-    if (!existing || created > new Date(existing.created)) {
-      grid[bucket][day] = conversation;
+    grid[bucket][day].push(conversation);
+  }
+  for (const row of grid) {
+    for (const cell of row) {
+      cell.sort((a, b) => new Date(a.created) - new Date(b.created));
     }
   }
 
@@ -70,14 +72,19 @@ function renderGrid(grid) {
     container.appendChild(rowLabel);
 
     for (let day = 0; day < 7; day++) {
-      const conversation = grid[bucketIdx][day];
+      const conversations = grid[bucketIdx][day];
       const cell = document.createElement('div');
       cell.className = 'week-cell';
-      if (conversation) {
-        cell.style.background = MODE_COLORS[conversation.mode];
-        cell.title = `${conversation.mode} — ${new Date(conversation.created).toLocaleString()}`;
-      } else {
+      if (conversations.length === 0) {
         cell.classList.add('empty');
+      } else {
+        for (const conversation of conversations) {
+          const stripe = document.createElement('div');
+          stripe.className = 'stripe';
+          stripe.style.background = MODE_COLORS[conversation.mode];
+          stripe.title = `${conversation.mode} — ${new Date(conversation.created).toLocaleString()}`;
+          cell.appendChild(stripe);
+        }
       }
       container.appendChild(cell);
     }
